@@ -1,0 +1,38 @@
+version: "3.4"
+
+x-default: &default
+    restart: unless-stopped
+    build: 
+        context: .
+        args:
+            CMAKE_VERSION: 3.13.2
+            GDB_VERSION: 8.2
+            
+    volumes:
+    - /Users/skychi/data/git_work/CLionProjects:/data/projects
+    networks:
+    - default
+
+services:
+    c-project:
+        <<: *default
+        container_name: "c-project"
+        ports:
+        - "12922:22"
+        - "11234:1234"
+        hostname: "c-project"
+        privileged: true
+        user: deploy
+        working_dir: /data/projects/ptraceDemo
+        networks:
+            c:
+                ipv4_address: 172.129.2.2
+        command:
+            "sudo /usr/sbin/sshd -D"
+
+networks:
+    c:
+        ipam:
+            driver: default
+            config:
+            - subnet: 172.129.2.0/24   

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+action=$1
+
+if [ $action = "enter" ]; then
+    docker exec -it c-project /bin/bash
+elif [ $action = "build" ]; then
+    docker-compose build
+elif [ $action = "up" ]; then
+    docker-compose up -d
+elif [ $action = "down" ]; then
+    docker-compose down
+elif [ $action = "debug" ]; then
+    docker-compose exec c-project sh -c "gdbserver :1234 cmake-build-debug-c-docker/${*:2}"
+fi
